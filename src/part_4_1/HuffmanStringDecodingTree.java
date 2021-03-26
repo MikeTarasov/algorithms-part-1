@@ -1,18 +1,30 @@
 package part_4_1;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class HuffmanStringDecodingTree {
+    /**
+     * Test x10 middle time:
+     * n= 1_000 time= 64 ms
+     * n= 10_000 time= 106 ms -> x1.7
+     * n= 100_000 time= 209 ms -> x2.0
+     */
     private static final Node rootNode = new Node();
     private static String codedString;
+    private static final String count = "1000";
+    private static final String testFile = "src/part_4_1/tests/n" + count + ".txt";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
+        long start = System.currentTimeMillis();
         huffmanStringDecodingTree();
+        System.out.println("\nn= " + count + " time= " + (System.currentTimeMillis() - start) + " ms");
     }
 
-    public static void huffmanStringDecodingTree() {
+    public static void huffmanStringDecodingTree() throws FileNotFoundException {
         List<Node> dictionary = input();
         generateTree(dictionary);
 
@@ -39,8 +51,10 @@ public class HuffmanStringDecodingTree {
         System.out.println(builder.toString());
     }
 
-    private static List<Node> input() {
-        Scanner scanner = new Scanner(System.in);
+    private static List<Node> input() throws FileNotFoundException {
+        Scanner scanner = new Scanner(new File(testFile));
+        scanner.nextLine();
+//        Scanner scanner = new Scanner(System.in);
 
         int symbolsCount = scanner.nextInt();
         int codedStringLength = scanner.nextInt();

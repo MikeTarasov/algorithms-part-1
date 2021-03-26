@@ -1,5 +1,7 @@
 package part_4_1;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 public class HuffmanStringDecodingDictionary {
@@ -36,15 +38,24 @@ public class HuffmanStringDecodingDictionary {
      * 01001100100111
      * Output 2:
      * abacabad
+     *
+     * Test x10 middle time:
+     * n= 1_000 time= 89 ms
+     * n= 10_000 time= 209 ms -> x2.3
+     * n= 100_000 time= 656 ms -> x3.1
      */
     private static final Set<Dictionary> dictionary = new HashSet<>();
     private static String codedString;
+    private static final String count = "1000";
+    private static final String testFile = "src/part_4_1/tests/n" + count + ".txt";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
+        long start = System.currentTimeMillis();
         huffmanStringDecoding();
+        System.out.println("\nn= " + count + " time= " + (System.currentTimeMillis() - start) + " ms");
     }
 
-    public static void huffmanStringDecoding() {
+    public static void huffmanStringDecoding() throws FileNotFoundException {
         input();
 
         char[] codedChars = codedString.toCharArray();
@@ -63,8 +74,10 @@ public class HuffmanStringDecodingDictionary {
         System.out.println(builder.toString());
     }
 
-    private static void input() {
-        Scanner scanner = new Scanner(System.in);
+    private static void input() throws FileNotFoundException {
+        Scanner scanner = new Scanner(new File(testFile));
+        scanner.nextLine();
+//        Scanner scanner = new Scanner(System.in);
 
         int symbolsCount = scanner.nextInt();
         int codedStringLength = scanner.nextInt();

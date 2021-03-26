@@ -22,9 +22,26 @@ public class HuffmanStringCoding {
      * c: 110
      * d: 111
      * 01001100100111
+     *
+     * Test:
+     * n= 1_000 time= 70 ms
+     * n= 10_000 time= 97 ms -> x1.4
+     * n= 100_000 time= 193 ms -> x2
+     *
+     * Test without print:
+     * n= 1_000 time= 48 ms
+     * n= 10_000 time= 82 ms -> x1.7
+     * n= 100_000 time= 145 ms -> x1.8
+     * n= 1_000_000 time= 475 ms -> x3.3
+     * n= 10_000_000 time= 2_706 ms -> x5.7
+     * n= 100_000_000 time= 30_143 ms -> x11.1
      */
+    private static final int count = 5_000_000;
+
     public static void main(String[] args) {
+        long start = System.currentTimeMillis();
         huffmanStringCoding();
+        System.out.println("\nn= " + count + " time= " + (System.currentTimeMillis() - start) + " ms");
     }
 
     public static void huffmanStringCoding() {
@@ -39,13 +56,19 @@ public class HuffmanStringCoding {
 
         String resultCode = codeString(letters, input);
 
-        System.out.println(letters.size() + " " + resultCode.length());
-        letters.forEach(letter -> System.out.println(letter.getLetter().concat(": ").concat(letter.getCode())));
-        System.out.println(resultCode);
+//        System.out.println(letters.size() + " " + resultCode.length());
+//        letters.forEach(letter -> System.out.println(letter.getLetter().concat(": ").concat(letter.getCode())));
+//        System.out.println(resultCode);
     }
 
     private static String input() {
-        return new Scanner(System.in).nextLine();
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < count; i++) {
+            builder.append((char) Math.round(97 + Math.random() * (122 - 97)));
+        }
+//        System.out.println(builder.toString());
+        return builder.toString();
+//        return new Scanner(System.in).nextLine();
     }
 
     private static List<Letter> parseString(String input) {
