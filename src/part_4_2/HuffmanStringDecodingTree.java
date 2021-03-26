@@ -15,8 +15,8 @@ public class HuffmanStringDecodingTree {
      */
     private static final Node rootNode = new Node();
     private static String codedString;
-    private static final String count = "1000";
-    private static final String testFile = "src/part_4_1/tests/n" + count + ".txt";
+    private static final int count = 100_000;
+    private static final String testFile = "src/part_4_2/tests/n" + count + ".txt";
 
     public static void main(String[] args) throws FileNotFoundException {
         long start = System.currentTimeMillis();

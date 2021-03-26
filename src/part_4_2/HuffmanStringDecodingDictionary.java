@@ -2,7 +2,9 @@ package part_4_2;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 public class HuffmanStringDecodingDictionary {
     /**
@@ -17,7 +19,6 @@ public class HuffmanStringDecodingDictionary {
      * Наконец, в последней строке записана закодированная строка.
      * Исходная строка и коды всех букв не пусты.
      * Заданный код таков, что закодированная строка имеет минимальный возможный размер.
-     * <p>
      * <p>
      * В первой строке выходного файла выведите строку s. Она должна состоять из строчных букв латинского алфавита.
      * Гарантируется, что длина правильного ответа не превосходит 10^4 символов.
@@ -38,16 +39,16 @@ public class HuffmanStringDecodingDictionary {
      * 01001100100111
      * Output 2:
      * abacabad
-     *
+     * <p>
      * Test x10 middle time:
-     * n= 1_000 time= 89 ms
-     * n= 10_000 time= 209 ms -> x2.3
-     * n= 100_000 time= 656 ms -> x3.1
+     * n= 1_000 time= 61 ms
+     * n= 10_000 time= 126 ms -> x2.1
+     * n= 100_000 time= 309 ms -> x2.5
      */
-    private static final Set<Dictionary> dictionary = new HashSet<>();
+    private static final int count = 100_000;
+    private static final Map<String, Character> dictionary = new HashMap<>(40);
+    private static final String testFile = "src/part_4_2/tests/n" + count + ".txt";
     private static String codedString;
-    private static final String count = "1000";
-    private static final String testFile = "src/part_4_1/tests/n" + count + ".txt";
 
     public static void main(String[] args) throws FileNotFoundException {
         long start = System.currentTimeMillis();
@@ -58,19 +59,18 @@ public class HuffmanStringDecodingDictionary {
     public static void huffmanStringDecoding() throws FileNotFoundException {
         input();
 
-        char[] codedChars = codedString.toCharArray();
-        String matrix = "";
+        StringBuilder matrix = new StringBuilder();
         StringBuilder builder = new StringBuilder();
-        for (char codedChar : codedChars) {
-            matrix = matrix.concat(String.valueOf(codedChar));
-            String finalMatrix = matrix;
-            Optional<Dictionary> optional = dictionary.stream().filter(e -> e.getCode().equals(finalMatrix)).findFirst();
-            if (optional.isPresent()) {
-                matrix = "";
-                builder.append(optional.get().getSymbol());
+
+        for (char codedChar : codedString.toCharArray()) {
+
+            matrix.append(codedChar);
+
+            if (dictionary.containsKey(matrix.toString())) {
+                builder.append(dictionary.get(matrix.toString()));
+                matrix = new StringBuilder();
             }
         }
-
         System.out.println(builder.toString());
     }
 
@@ -84,40 +84,9 @@ public class HuffmanStringDecodingDictionary {
         scanner.nextLine();
         for (int i = 0; i < symbolsCount; i++) {
             String[] letterCodes = scanner.nextLine().replaceAll(":", "").split("\\s+");
-            dictionary.add(new Dictionary(letterCodes[0], letterCodes[1]));
+            dictionary.put(letterCodes[1], letterCodes[0].charAt(0));
         }
         codedString = scanner.nextLine();
         scanner.close();
-    }
-
-    static class Dictionary {
-        private final String symbol;
-        private final String code;
-
-        public Dictionary(String symbol, String code) {
-            this.symbol = symbol;
-            this.code = code;
-        }
-
-        public String getSymbol() {
-            return symbol;
-        }
-
-        public String getCode() {
-            return code;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof Dictionary)) return false;
-            Dictionary that = (Dictionary) o;
-            return symbol.equals(that.symbol);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(symbol);
-        }
     }
 }
