@@ -1,4 +1,4 @@
-package part_4_1;
+package part_4_2;
 
 import java.util.*;
 
@@ -36,7 +36,7 @@ public class HuffmanStringCoding {
      * n= 10_000_000 time= 2_706 ms -> x5.7
      * n= 100_000_000 time= 30_143 ms -> x11.1
      */
-    private static final int count = 5_000_000;
+    private static final int count = 10_000;
 
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
@@ -47,18 +47,18 @@ public class HuffmanStringCoding {
     public static void huffmanStringCoding() {
         String input = input();
 
-        List<Letter> letters = parseString(input);
+        List<Node> nodes = parseString(input);
 
-        letters.sort(Comparator.comparing(Letter::getFrequency).reversed());
+        nodes.sort(Comparator.comparing(Node::getFrequency).reversed());
 
-        Letter rootNode = makeBinaryTree(letters);
+        Node rootNode = makeBinaryTree(nodes);
         fillingCodes(rootNode, "");
 
-        String resultCode = codeString(letters, input);
+        String resultCode = codeString(nodes, input);
 
-//        System.out.println(letters.size() + " " + resultCode.length());
-//        letters.forEach(letter -> System.out.println(letter.getLetter().concat(": ").concat(letter.getCode())));
-//        System.out.println(resultCode);
+        System.out.println(nodes.size() + " " + resultCode.length());
+        nodes.forEach(letter -> System.out.println(letter.getSymbol().concat(": ").concat(letter.getCode())));
+        System.out.println(resultCode);
     }
 
     private static String input() {
@@ -66,54 +66,53 @@ public class HuffmanStringCoding {
         for (int i = 0; i < count; i++) {
             builder.append((char) Math.round(97 + Math.random() * (122 - 97)));
         }
-//        System.out.println(builder.toString());
         return builder.toString();
 //        return new Scanner(System.in).nextLine();
     }
 
-    private static List<Letter> parseString(String input) {
-        List<Letter> letters = new ArrayList<>();
+    private static List<Node> parseString(String input) {
+        List<Node> nodes = new ArrayList<>();
         for (char c : input.toCharArray()) {
-            Letter letter = new Letter(c);
-            if (letters.contains(letter)) {
-                letter = letters.get(letters.indexOf(letter));
-                letter.increaseFrequency();
+            Node node = new Node(c);
+            if (nodes.contains(node)) {
+                node = nodes.get(nodes.indexOf(node));
+                node.increaseFrequency();
             } else {
-                letters.add(letter);
+                nodes.add(node);
             }
         }
-        return letters;
+        return nodes;
     }
 
-    private static Letter makeBinaryTree(List<Letter> letters) {
-        Set<Letter> queue = new HashSet<>(letters);
-        Letter rootNode = null;
-        if (letters.size() == 1) {
-            rootNode = letters.get(0);
+    private static Node makeBinaryTree(List<Node> nodes) {
+        Set<Node> queue = new HashSet<>(nodes);
+        Node rootNode = null;
+        if (nodes.size() == 1) {
+            rootNode = nodes.get(0);
         }
         while (queue.size() > 1) {
-            Letter first = getLowestElement(queue);
-            Letter second = getLowestElement(queue);
-            Letter nodeLetter = new Letter(first, second);
-            queue.add(nodeLetter);
-            rootNode = nodeLetter;
+            Node first = getLowestElement(queue);
+            Node second = getLowestElement(queue);
+            Node nodeNode = new Node(first, second);
+            queue.add(nodeNode);
+            rootNode = nodeNode;
         }
         return rootNode;
     }
 
-    private static Letter getLowestElement(Set<Letter> queue) {
-        Letter letter = queue.stream().min((e1, e2) -> {
+    private static Node getLowestElement(Set<Node> queue) {
+        Node node = queue.stream().min((e1, e2) -> {
             int compare = Integer.compare(e1.getFrequency(), e2.getFrequency());
             if (compare == 0) {
-                return Integer.compare(e1.getLetter().length(), e2.getLetter().length());
+                return Integer.compare(e1.getSymbol().length(), e2.getSymbol().length());
             }
             return compare;
         }).orElseThrow();
-        queue.remove(letter);
-        return letter;
+        queue.remove(node);
+        return node;
     }
 
-    private static void fillingCodes(Letter node, String prefix) {
+    private static void fillingCodes(Node node, String prefix) {
         if (node.getLeft() != null) {
             fillingCodes(node.getLeft(), prefix.concat("1"));
         }
@@ -130,10 +129,10 @@ public class HuffmanStringCoding {
         }
     }
 
-    private static String codeString(List<Letter> letters, String input) {
+    private static String codeString(List<Node> nodes, String input) {
         Map<String, String> charCodes = new HashMap<>();
-        for (Letter letter : letters) {
-            charCodes.put(letter.getLetter(), letter.getCode());
+        for (Node node : nodes) {
+            charCodes.put(node.getSymbol(), node.getCode());
         }
 
         StringBuilder builder = new StringBuilder();
@@ -143,29 +142,29 @@ public class HuffmanStringCoding {
         return builder.toString();
     }
 
-    static class Letter {
-        private final String letter;
+    static class Node {
+        private final String symbol;
         private int frequency;
         private String code;
-        private Letter left;
-        private Letter right;
+        private Node left;
+        private Node right;
 
-        public Letter(char letter) {
-            this.letter = String.valueOf(letter);
+        public Node(char symbol) {
+            this.symbol = String.valueOf(symbol);
             frequency = 1;
             code = "";
         }
 
-        public Letter(Letter right, Letter left) {
-            letter = right.getLetter().concat(left.getLetter());
+        public Node(Node right, Node left) {
+            symbol = right.getSymbol().concat(left.getSymbol());
             frequency = right.getFrequency() + left.getFrequency();
             this.left = left;
             this.right = right;
             code = "";
         }
 
-        public String getLetter() {
-            return letter;
+        public String getSymbol() {
+            return symbol;
         }
 
         public int getFrequency() {
@@ -180,11 +179,11 @@ public class HuffmanStringCoding {
             this.code = code;
         }
 
-        public Letter getLeft() {
+        public Node getLeft() {
             return left;
         }
 
-        public Letter getRight() {
+        public Node getRight() {
             return right;
         }
 
@@ -195,14 +194,14 @@ public class HuffmanStringCoding {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof Letter)) return false;
-            Letter letter1 = (Letter) o;
-            return letter.equals(letter1.letter);
+            if (!(o instanceof Node)) return false;
+            Node node1 = (Node) o;
+            return symbol.equals(node1.symbol);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(letter);
+            return Objects.hash(symbol);
         }
     }
 }
