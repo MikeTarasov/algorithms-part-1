@@ -2,7 +2,7 @@ package part_4_1;
 
 import java.util.*;
 
-public class HuffmanStringDecoding {
+public class HuffmanStringDecodingDictionary {
     /**
      * Восстановите строку по её коду и беспрефиксному коду символов.
      * <p>
