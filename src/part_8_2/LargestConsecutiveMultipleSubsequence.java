@@ -1,5 +1,8 @@
 package part_8_2;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 
 public class LargestConsecutiveMultipleSubsequence {
@@ -22,29 +25,29 @@ public class LargestConsecutiveMultipleSubsequence {
      * n= 40_000_000, time= 4_757 ms
      * n= 80_000_000, time= 9_829 ms
      */
-    int n = 80_000_000;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         new LargestConsecutiveMultipleSubsequence().run();
     }
 
-    public void run() {
-        long start = System.currentTimeMillis();
+    public void run() throws IOException {
         int[] array = input();
-        long middle = System.currentTimeMillis();
-//        System.out.println(Arrays.toString(array));
-        longestIncreasingSubsequence(array);
-        long end = System.currentTimeMillis();
-
-        System.out.printf("generate n= %d, time= %d ms", n, middle - start);
-        System.out.printf("\nresult n= %d, time= %d ms", n, end - middle);
+        longestDecreasingSubsequence(array);
     }
 
-    private int[] input() {
+    private int[] input() throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+
+        int n = Integer.parseInt(bufferedReader.readLine());
+
         int[] array = new int[n];
-        for (int i = 0; i < n; i++) {
-            array[i] = (int) Math.round(Math.random() * 1_000_000_000);
+        int i = 0;
+        for (String value : bufferedReader.readLine().split("\\s+")) {
+            array[i] = Integer.parseInt(value);
+            i++;
         }
+
+        bufferedReader.close();
         return array;
     }
 
@@ -61,12 +64,12 @@ public class LargestConsecutiveMultipleSubsequence {
         return right;
     }
 
-    private void longestIncreasingSubsequence(int[] array) {
+    private void longestDecreasingSubsequence(int[] array) {
         int size = array.length;
 
         int[] tailIndexes = new int[size];
         int[] previousIndexes = new int[size];
-        Arrays.fill(tailIndexes, 0);
+
         Arrays.fill(previousIndexes, -1);
 
         int length = 1;
@@ -84,13 +87,15 @@ public class LargestConsecutiveMultipleSubsequence {
             }
         }
 
-        System.out.println("k = " + length);
+        System.out.println(length);
+
         int[] result = new int[length];
         int index = length - 1;
         for (int i = tailIndexes[length - 1]; i >= 0; i = previousIndexes[i]) {
-            result[index--] = array[i];
+            result[index--] = i + 1;
         }
-
-//        System.out.println(Arrays.toString(result));
+        for (int i : result) {
+            System.out.print(i + " ");
+        }
     }
 }
