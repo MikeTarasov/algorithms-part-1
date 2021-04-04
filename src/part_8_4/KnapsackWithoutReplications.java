@@ -1,6 +1,6 @@
 package part_8_4;
 
-import java.util.Scanner;
+import java.util.Arrays;
 
 public class KnapsackWithoutReplications {
     /**
@@ -15,8 +15,27 @@ public class KnapsackWithoutReplications {
      * <p>
      * Output:
      * 9
+     *
+     * Tests:
+     *
+     * W=   1_000, n=   1_000, time=       1 ms
+     * W=  10_000, n=   1_000, time=       4 ms
+     * W=  10_000, n=  10_000, time=      24 ms
+     * W=  10_000, n= 100_000, time=     115 ms
+     * W= 100_000, n=  10_000, time=     717 ms
+     * W= 100_000, n=  10_000, time=   1_661 ms
+     * W= 100_000, n= 100_000, time=   5_273 ms
+     * W= 100_000, n= 200_000, time=   8_994 ms
+     * W= 100_000, n= 100_000, time=  11_749 ms
+     * W= 200_000, n= 100_000, time=  34_875 ms
+     * W= 200_000, n= 200_000, time=  32_057 ms
+     * W= 200_000, n= 200_000, time=  34_670 ms
+     * W= 400_000, n= 200_000, time=  75_320 ms
+     * W= 400_000, n= 400_000, time= 141_242 ms
+     *
      */
-    private int knapsackCapacity;
+    private final int knapsackCapacity = 100_000;
+    private final int goldQuantity = 10_000;
 
 
     public static void main(String[] args) {
@@ -25,7 +44,9 @@ public class KnapsackWithoutReplications {
 
     public void run() {
         int[] weights = input();
+        long start = System.currentTimeMillis();
         int count = knapsackWithoutReplicationsCount(weights);
+        System.out.println("W= " + knapsackCapacity + ", n= " + goldQuantity + ", time= " + (System.currentTimeMillis() - start) + " ms");
         System.out.println(count);
     }
 
@@ -52,16 +73,21 @@ public class KnapsackWithoutReplications {
 
 
     private int[] input() {
-        Scanner scanner = new Scanner(System.in);
-
-        knapsackCapacity = scanner.nextInt();
-        int goldQuantity = scanner.nextInt();
+//        Scanner scanner = new Scanner(System.in);
+//
+//        knapsackCapacity = scanner.nextInt();
+//        int goldQuantity = scanner.nextInt();
         int[] weights = new int[goldQuantity];
-        scanner.nextLine();
+//        scanner.nextLine();
+//        for (int i = 0; i < goldQuantity; i++) {
+//            weights[i] = scanner.nextInt();
+//        }
+//        scanner.close();
+
         for (int i = 0; i < goldQuantity; i++) {
-            weights[i] = scanner.nextInt();
+            weights[i] = (int) Math.round(Math.random() * 100_000);
         }
-        scanner.close();
+        Arrays.sort(weights);
         return weights;
     }
 }
