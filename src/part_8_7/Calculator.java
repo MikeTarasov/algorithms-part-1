@@ -1,7 +1,5 @@
 package part_8_7;
 
-import java.util.Scanner;
-
 public class Calculator {
     /**
      * У вас есть примитивный калькулятор, который умеет выполнять всего три операции с текущим числом x:
@@ -28,8 +26,17 @@ public class Calculator {
      * Sample Output 3:
      * 14
      * 1 3 9 10 11 22 66 198 594 1782 5346 16038 16039 32078 96234
+     *
+     * Tests:
+     * n=       1_000, time=     1 ms
+     * n=      10_000, time=     2 ms
+     * n=     100_000, time=    13 ms
+     * n=   1_000_000, time=    45 ms
+     * n=  10_000_000, time=   160 ms
+     * n= 100_000_000, time= 1_317 ms
+     * n= 200_000_000, time= 6_644 ms
      */
-    private final int n = 96234;
+    private final int n = 200_000_000;
 
     public static void main(String[] args) {
         new Calculator().run();
@@ -37,7 +44,9 @@ public class Calculator {
 
     public void run() {
         int n = input();
+        long start = System.currentTimeMillis();
         calculator(n);
+        System.out.println("n= " + n + ", time= " + (System.currentTimeMillis() - start) + " ms");
     }
 
     private void calculator(int n) {
@@ -63,9 +72,9 @@ public class Calculator {
             result[j--] = i;
         }
 
-        for (int k : result) {
-            System.out.print(k + " ");
-        }
+//        for (int k : result) {
+//            System.out.print(k + " ");
+//        }
     }
 
     private void fill(int[] steps, int[] previous, int i, int x) {
@@ -79,9 +88,9 @@ public class Calculator {
     }
 
     private int input() {
-        Scanner scanner = new Scanner(System.in);
-        int n = scanner.nextInt();
-        scanner.close();
+//        Scanner scanner = new Scanner(System.in);
+//        int n = scanner.nextInt();
+//        scanner.close();
         return n;
     }
 }
